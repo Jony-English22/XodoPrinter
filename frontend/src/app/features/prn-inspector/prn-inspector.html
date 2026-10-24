@@ -1,0 +1,49 @@
+<section class="heading"><div class="eyebrow"><span class="eyebrow-mark"></span> LABORATORIO DE FORMATO</div>
+  <h1>Analizar archivo PRN</h1>
+  <p>Inspecciona la estructura de un trabajo sin ejecutar impresión ni acceder a la máquina.</p></section>
+
+<div class="analysis-grid">
+  <section class="panel upload-panel" aria-labelledby="upload-heading">
+    <div class="panel-top"><h2 id="upload-heading">Archivo de impresión</h2><span class="meta">PASO 01</span></div>
+    <div class="drop-area" [class.dragging]="dragOver()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+      <div class="file-symbol" aria-hidden="true"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 14h8M8 18h5"/></svg></div>
+      <strong>Suelta aquí tu archivo .PRN</strong>
+      <span class="drop-help">o utiliza el explorador de archivos</span>
+      <label class="file-picker" for="prn-file">Examinar archivo</label>
+      <input id="prn-file" type="file" accept=".prn" [disabled]="busy()" (change)="onFileSelected($event)" aria-label="Seleccionar un archivo PRN" />
+      <small>Hasta 64 MiB · Solo lectura · No se envía nada al plotter</small>
+    </div>
+    @if (selectedFile(); as file) {
+      <div class="selection" aria-live="polite"><div class="selection-bullet">PRN</div>
+        <div class="selection-info"><strong>{{ file.name }}</strong><span>{{ formatBytes(file.size) }}</span></div>
+        <button type="button" class="clear" (click)="clear()" [disabled]="busy()" aria-label="Quitar archivo">×</button>
+      </div>
+    }
+    @if (error(); as message) {<div class="error" role="alert">{{ message }}</div>}
+    <button type="button" class="analyze-btn" (click)="analyze()" [disabled]="!selectedFile() || busy()">
+      @if (busy()) {Analizando archivo...} @else {Analizar archivo <span aria-hidden="true">→</span>}
+    </button>
+  </section>
+
+  <section class="panel results-panel" aria-labelledby="results-heading">
+    <div class="panel-top"><h2 id="results-heading">Resultado del análisis</h2><span class="meta">PASO 02</span></div>
+    @if (result(); as data) {
+      <div class="recognition" [class.not-recognized]="!data.recognized"><span class="rec-dot"></span><strong>{{ data.recognized ? 'Estructura reconocida' : 'Estructura no reconocida' }}</strong></div>
+      <div class="result-filename" [title]="data.fileName">{{ data.fileName }}</div>
+      <div class="metrics"><div class="metric"><span>Ancho candidato</span><strong>{{ data.widthCandidate }}</strong></div>
+        <div class="metric"><span>Alto candidato</span><strong>{{ data.heightCandidate }}</strong></div>
+        <div class="metric"><span>Canales candidatos</span><strong>{{ data.channelCountCandidate }}</strong></div>
+        <div class="metric"><span>Tamaño</span><strong class="metric-size">{{ formatBytes(data.fileSize) }}</strong></div>
+      </div>
+      <div class="observations"><strong>Advertencias del analizador</strong>
+        @if (data.warnings.length > 0) {<ul>@for (warning of data.warnings; track $index) {<li>{{ warning }}</li>}</ul>}
+        @else {<p>No se reportaron advertencias para la estructura analizada.</p>}
+      </div>
+      <p class="result-note">Los campos son hipótesis de investigación. Un archivo reconocido no implica que pueda imprimirse.</p>
+    } @else {
+      <div class="empty-result"><div class="empty-symbol" aria-hidden="true">▤</div><strong>Aún no hay resultados</strong>
+        <p>Selecciona un PRN y presiona «Analizar archivo» para visualizar su información.</p></div>
+    }
+  </section>
+</div>
+<div class="notice"><span class="notice-icon">i</span><div><strong>Entorno de investigación</strong><p>XodoPrinter 0.3 no controla cabezales, motores, USB ni el dispositivo. La inspección es únicamente local y de lectura.</p></div></div>

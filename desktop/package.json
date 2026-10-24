@@ -1,0 +1,49 @@
+{
+  "name": "xodoprinter-desktop",
+  "version": "0.6.0",
+  "private": true,
+  "description": "XodoPrinter 0.6: instalador de laboratorio PRN (NO distribuir a clientes)",
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "preview:built": "node scripts/stage.cjs && electron . --built",
+    "package:prepare": "node scripts/stage.cjs && node scripts/stage-runtime.cjs",
+    "package:dir": "pnpm package:prepare && electron-builder --dir --win --x64",
+    "package:installer:lab": "pnpm package:prepare && electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.18.0"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "build": {
+    "appId": "com.twdev.xodoprinter.laboratorio",
+    "productName": "XodoPrinter Laboratorio",
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist-installer"
+    },
+    "extraResources": [
+      { "from": ".staged/web", "to": "xodo/web" },
+      { "from": ".staged/backend/xodoprinter.jar", "to": "xodo/backend/xodoprinter.jar" },
+      { "from": ".staged/runtime", "to": "xodo/runtime" }
+    ],
+    "win": {
+      "target": ["nsis"],
+      "executableName": "XodoPrinterLab"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "artifactName": "XodoPrinter-Laboratorio-${version}-Setup.${ext}"
+    }
+  }
+}

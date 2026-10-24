@@ -1,0 +1,36 @@
+<div class="shell">
+  <aside class="sidebar" aria-label="Navegación de XodoPrinter">
+    <div class="identity"><div class="brand-mark" aria-hidden="true">X</div><div><strong>XodoPrinter</strong><span>Desktop studio</span></div></div>
+    <div class="nav-group-title">ESPACIO DE TRABAJO</div>
+    <nav aria-label="Módulos"><a class="nav-link active" aria-current="page" href="/"> <span class="nav-icon">▣</span> Analizar PRN</a>
+      <span class="nav-link disabled" aria-disabled="true" title="Aún no disponible"><span class="nav-icon">☷</span> Cola de trabajos <span class="soon">Próx.</span></span>
+      <span class="nav-link disabled" aria-disabled="true" title="Aún no disponible"><span class="nav-icon">⬡</span> Dispositivo <span class="soon">Próx.</span></span>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="version">XodoPrinter · Laboratorio</div>
+      <div class="safety"><span class="safety-dot"></span> Sin acceso al hardware</div>
+      <div class="desktop-information" aria-live="polite">
+        @if (desktopInfo(); as info) {
+          <div class="version">{{ info.appName }} v{{ info.appVersion }}</div>
+          <div class="version">{{ platformLabel(info.platform) }} · Electron {{ info.electronVersion }}</div>
+        } @else if (desktopInfoError()) {
+          <div class="version">No se pudo consultar Electron</div>
+        } @else if (desktopMode()) {
+          <div class="version">Consultando Electron...</div>
+        } @else {
+          <div class="version">Modo navegador (sin Electron)</div>
+        }
+      </div>
+    </div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb">XodoPrinter <span>/</span> Analizar PRN</div>
+      <div class="backend-control"><span class="status-dot" [class.online]="backendStatus() === 'online'" [class.checking]="backendStatus() === 'checking'"></span>
+        @if (backendStatus() === 'online') { <span>Motor Java disponible</span> }
+        @else if (backendStatus() === 'checking') { <span>Comprobando motor...</span> }
+        @else { <span>Motor Java desconectado</span> }
+        <button type="button" class="refresh-btn" (click)="checkBackend()" aria-label="Volver a comprobar la conexión">↻</button>
+      </div></header>
+    <main class="main-content"><app-prn-inspector /></main>
+  </div>
+</div>

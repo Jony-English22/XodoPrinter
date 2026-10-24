@@ -1,0 +1,61 @@
+# IntelliJ IDEA y editores
+.idea/
+*.iml
+.vscode/
+
+# Java / Maven
+**/target/
+*.class
+*.jar
+!**/.mvn/wrapper/maven-wrapper.jar
+
+# Angular / Node.js / pnpm
+**/node_modules/
+**/.angular/
+**/dist/
+**/coverage/
+*.tsbuildinfo
+
+# Electron - Archivos generados
+desktop/.staged/
+desktop/dist-installer/
+desktop/out/
+desktop/release/
+
+# Instaladores y binarios
+*.exe
+*.msi
+*.dll
+*.sys
+*.zip
+
+# PRN reales o privados
+*.prn
+
+# Permitir únicamente ejemplos sintéticos
+!**/samples/synthetic-*.prn
+
+# Material propietario / investigación
+PrintExp*/
+UltraPrint*/
+vendor-binaries/
+research/private/
+samples/private/
+
+# Configuraciones privadas
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+
+# Logs
+*.log
+logs/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini

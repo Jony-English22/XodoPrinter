@@ -1,0 +1,6 @@
+node_modules/
+.staged/
+dist/
+dist-installer/
+release/
+*.log
